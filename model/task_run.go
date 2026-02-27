@@ -71,7 +71,7 @@ type Shell struct {
 }
 
 type RunWorkflow struct {
-	Namespace string                 `json:"namespace" validate:"required,hostname_rfc1123"`
+	Namespace string                 `json:"namespace,omitempty" validate:"omitempty,hostname_rfc1123"`
 	Name      string                 `json:"name" validate:"required,hostname_rfc1123"`
 	Version   string                 `json:"version" validate:"required,semver_pattern"`
 	Input     map[string]interface{} `json:"input,omitempty"`

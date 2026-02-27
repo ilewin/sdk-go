@@ -75,7 +75,7 @@ func (w *Workflow) MarshalYAML() (interface{}, error) {
 // Document holds metadata for the workflow.
 type Document struct {
 	DSL       string                 `json:"dsl" yaml:"dsl" validate:"required,semver_pattern"`
-	Namespace string                 `json:"namespace" yaml:"namespace" validate:"required,hostname_rfc1123"`
+	Namespace string                 `json:"namespace,omitempty" yaml:"namespace,omitempty" validate:"omitempty,hostname_rfc1123"`
 	Name      string                 `json:"name" yaml:"name" validate:"required,hostname_rfc1123"`
 	Version   string                 `json:"version" yaml:"version" validate:"required,semver_pattern"`
 	Title     string                 `json:"title,omitempty" yaml:"title,omitempty"`
