@@ -150,6 +150,59 @@ func TestDocument_Validation_MissingRequiredField(t *testing.T) {
 	assert.Contains(t, err.Error(), "Key: 'Document.DSL' Error:Field validation for 'DSL' failed on the 'required' tag")
 }
 
+func TestDocument_Validation_NamespaceOptional(t *testing.T) {
+	inputJSON := `{
+		"dsl": "1.0.0",
+		"name": "example-name",
+		"version": "1.0.0"
+	}` // Missing "namespace" — should be valid
+
+	var doc Document
+	err := json.Unmarshal([]byte(inputJSON), &doc)
+	assert.NoError(t, err)
+
+	// Validate the struct — namespace is optional
+	err = validate.Struct(doc)
+	assert.NoError(t, err)
+	assert.Empty(t, doc.Namespace)
+}
+
+func TestDocument_Validation_NamespaceValidatedWhenProvided(t *testing.T) {
+	inputJSON := `{
+		"dsl": "1.0.0",
+		"namespace": "invalid namespace!@#",
+		"name": "example-name",
+		"version": "1.0.0"
+	}`
+
+	var doc Document
+	err := json.Unmarshal([]byte(inputJSON), &doc)
+	assert.NoError(t, err)
+
+	// Validate — namespace should still be validated against hostname_rfc1123 when provided
+	err = validate.Struct(doc)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "Namespace")
+	assert.Contains(t, err.Error(), "hostname_rfc1123")
+}
+
+func TestDocument_JSONMarshal_WithoutNamespace(t *testing.T) {
+	doc := Document{
+		DSL:     "1.0.0",
+		Name:    "example-name",
+		Version: "1.0.0",
+	}
+
+	data, err := json.Marshal(doc)
+	assert.NoError(t, err)
+
+	// Namespace should be omitted from JSON when empty
+	var m map[string]interface{}
+	assert.NoError(t, json.Unmarshal(data, &m))
+	_, hasNamespace := m["namespace"]
+	assert.False(t, hasNamespace, "namespace should be omitted when empty")
+}
+
 func TestSchemaValidation(t *testing.T) {
 
 	tests := []struct {
