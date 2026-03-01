@@ -223,6 +223,7 @@ func init() {
 		"switch":        func() Task { return &SwitchTask{} },
 		"try":           func() Task { return &TryTask{} },
 		"wait":          func() Task { return &WaitTask{} },
+		"agent":         func() Task { return &AgentTask{} },
 	}
 
 	for taskType, constructor := range builtInTasks {
@@ -504,6 +505,17 @@ func (ti *TaskItem) AsWaitTask() *WaitTask {
 		return nil
 	}
 	if task, ok := ti.Task.(*WaitTask); ok {
+		return task
+	}
+	return nil
+}
+
+// AsAgentTask casts the Task to an AgentTask if possible, returning nil if the cast fails.
+func (ti *TaskItem) AsAgentTask() *AgentTask {
+	if ti == nil {
+		return nil
+	}
+	if task, ok := ti.Task.(*AgentTask); ok {
 		return task
 	}
 	return nil

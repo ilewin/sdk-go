@@ -203,6 +203,7 @@ type Use struct {
 	Secrets         []string                         `json:"secrets,omitempty"`
 	Timeouts        map[string]*Timeout              `json:"timeouts,omitempty" validate:"omitempty,dive"`
 	Catalogs        map[string]*Catalog              `json:"catalogs,omitempty" validate:"omitempty,dive"`
+	Agents          map[string]*AgentDefinition      `json:"agents,omitempty" validate:"omitempty,dive"`
 }
 
 type Catalog struct {
