@@ -132,6 +132,8 @@ func validateTaskItem(sl validator.StructLevel) {
 		validateConcreteTask(sl, t, "Task")
 	case *WaitTask:
 		validateConcreteTask(sl, t, "Task")
+	case *AgentTask:
+		validateConcreteTask(sl, t, "Task")
 	default:
 		sl.ReportError(taskItem.Task, "Task", "Task", "unknown_task", "unrecognized task type")
 	}
